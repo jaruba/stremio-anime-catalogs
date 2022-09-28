@@ -56,10 +56,9 @@ setTimeout(() => {
 const mapper = (query, opts, cb) => {
 	const idType = (Object.keys(opts) || [])[0]
 	const cachedId = (map[idType] || {})[opts[idType]]
-	if (idType && cachedId && kitsuCache[foundId]) {
+	if (idType && cachedId && kitsuCache[cachedId]) {
 		helpers.log('mapping', 'served ' + idType + ' ' + opts[idType] + ' from cache')
-		const foundId = cachedId
-		cb(foundId, kitsuCache[foundId], true, opts[idType])
+		cb(cachedId, kitsuCache[cachedId], true, opts[idType])
 		return
 	}
 	helpers.log('mapping', 'Searching for "' + query + '" with options: ' + JSON.stringify(opts))
