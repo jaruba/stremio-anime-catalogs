@@ -2,9 +2,9 @@
   "name": "stremio-anime-catalogs",
   "version": "1.0.0",
   "description": "Stremio catalogs for anime from: MyAnimeList, AniDB, AniList, Kitsu",
-  "main": "server.js",
+  "main": "addon.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node addon.js"
   },
   "license": "MIT",
   "dependencies": {
