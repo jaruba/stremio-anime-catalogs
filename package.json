@@ -1,6 +1,6 @@
 {
   "name": "stremio-anime-catalogs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stremio catalogs for anime from: MyAnimeList, AniDB, AniList, Kitsu",
   "main": "addon.js",
   "scripts": {
