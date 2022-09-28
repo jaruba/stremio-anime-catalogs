@@ -56,7 +56,7 @@ userOptions.forEach(el => {
 
 const manifest = { 
     id: 'org.stremio.animecatalogs',
-    version: '1.0.1',
+    version: '1.0.2',
 
     name: 'Anime Catalogs',
     description: 'Stremio catalogs for anime from: ' + userOptions.map(el => el.name).join(', '),
