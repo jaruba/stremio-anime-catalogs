@@ -1,0 +1,368 @@
+
+
+   <!DOCTYPE html>
+   <html style="background-image: url(https://1fe84bc728af-stremio-anime-catalogs.baby-beamup.club/addon-background.jpg);">
+
+   <head>
+      <meta charset="utf-8">
+      <title>Anime Catalogs - Stremio Addon</title>
+      <style>
+* {
+   box-sizing: border-box;
+}
+
+body,
+html {
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   min-height: 100%;
+}
+
+body {
+   padding: 2vh;
+   font-size: 2.2vh;
+}
+
+html {
+   background-size: auto 100%;
+   background-size: cover;
+   background-position: center center;
+   background-repeat: no-repeat;
+   box-shadow: inset 0 0 0 2000px rgb(0 0 0 / 60%);
+}
+
+body {
+   display: flex;
+   font-family: 'Open Sans', Arial, sans-serif;
+   color: white;
+}
+
+h1 {
+   font-size: 4.5vh;
+   font-weight: 700;
+}
+
+h2 {
+   font-size: 2.2vh;
+   font-weight: normal;
+   font-style: italic;
+   opacity: 0.8;
+}
+
+h3 {
+   font-size: 2.2vh;
+}
+
+h1,
+h2,
+h3,
+p {
+   margin: 0;
+   text-shadow: 0 0 1vh rgba(0, 0, 0, 0.15);
+}
+
+p {
+   font-size: 1.75vh;
+}
+
+ul {
+   font-size: 1.75vh;
+   margin: 0;
+   margin-top: 1vh;
+   padding-left: 3vh;
+}
+
+a {
+   color: white
+}
+
+a.install-link {
+   text-decoration: none
+}
+
+button {
+   border: 0;
+   outline: 0;
+   color: white;
+   background: #8A5AAB;
+   padding: 1.2vh 3.5vh;
+   margin: auto;
+   text-align: center;
+   font-family: 'Open Sans', Arial, sans-serif;
+   font-size: 2.2vh;
+   font-weight: 600;
+   cursor: pointer;
+   display: block;
+   box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+   transition: box-shadow 0.1s ease-in-out;
+}
+
+button:hover {
+   box-shadow: none;
+}
+
+button:active {
+   box-shadow: 0 0 0 0.5vh white inset;
+}
+
+#addon {
+   width: 40vh;
+   margin: auto;
+}
+
+.logo {
+   height: 14vh;
+   width: 14vh;
+   margin: auto;
+   margin-bottom: 3vh;
+}
+
+.logo img {
+   width: 100%;
+}
+
+.name, .version {
+   display: inline-block;
+   vertical-align: top;
+}
+
+.name {
+   line-height: 5vh;
+   margin: 0;
+}
+
+.version {
+   position: relative;
+   line-height: 5vh;
+   opacity: 0.8;
+   margin-bottom: 2vh;
+}
+
+.contact {
+   position: absolute;
+   left: 0;
+   bottom: 4vh;
+   width: 100%;
+   text-align: center;
+}
+
+.contact a {
+   font-size: 1.4vh;
+   font-style: italic;
+}
+
+.separator {
+   margin-bottom: 4vh;
+}
+
+.form-element {
+   margin-bottom: 2vh;
+}
+
+.label-to-top {
+   margin-bottom: 2vh;
+}
+
+.label-to-right {
+   margin-left: 1vh !important;
+}
+
+.full-width {
+   width: 100%;
+}
+</style>
+      <link rel="shortcut icon" href="https://1fe84bc728af-stremio-anime-catalogs.baby-beamup.club/addon-logo.png" type="image/x-icon">
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
+   </head>
+
+	<body>
+      <div id="addon">
+         <div class="logo">
+            <img src="https://1fe84bc728af-anime-stremio-catalogs.baby-beamup.club/addon-logo.png">
+         </div>
+         <h1 class="name">Anime Catalogs</h1>
+         <h2 class="version">v1.0.0</h2>
+         <h2 class="description">Stremio catalogs for anime from: MyAnimeList, AniDB, AniList, Kitsu</h2>
+
+         <div class="separator"></div>
+
+         <h3 class="gives">This addon has more:</h3>
+         <ul>
+            <li>Anime</li><li>Movies</li><li>Series</li>
+         </ul>
+
+         <div class="separator"></div>
+
+         
+            <form class="pure-form" id="mainForm">
+               
+               <div class="form-element">
+                  <label for="search">
+                     <input type="checkbox" id="search" name="search" checked> <span class="label-to-right">Kitsu Search</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="myanimelist_top-all-time">
+                     <input type="checkbox" id="myanimelist_top-all-time" name="myanimelist_top-all-time"> <span class="label-to-right">MyAnimeList - Top All Time</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="myanimelist_top-airing">
+                     <input type="checkbox" id="myanimelist_top-airing" name="myanimelist_top-airing"> <span class="label-to-right">MyAnimeList - Top Airing</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="myanimelist_top-series">
+                     <input type="checkbox" id="myanimelist_top-series" name="myanimelist_top-series"> <span class="label-to-right">MyAnimeList - Top Series</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="myanimelist_top-movies">
+                     <input type="checkbox" id="myanimelist_top-movies" name="myanimelist_top-movies"> <span class="label-to-right">MyAnimeList - Top Movies</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="myanimelist_popular">
+                     <input type="checkbox" id="myanimelist_popular" name="myanimelist_popular"> <span class="label-to-right">MyAnimeList - Popular</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="myanimelist_most-favorited">
+                     <input type="checkbox" id="myanimelist_most-favorited" name="myanimelist_most-favorited"> <span class="label-to-right">MyAnimeList - Most Favorited</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anidb_popular">
+                     <input type="checkbox" id="anidb_popular" name="anidb_popular"> <span class="label-to-right">AniDB - Popular</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anidb_latest-started">
+                     <input type="checkbox" id="anidb_latest-started" name="anidb_latest-started"> <span class="label-to-right">AniDB - Latest Started</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anidb_latest-ended">
+                     <input type="checkbox" id="anidb_latest-ended" name="anidb_latest-ended"> <span class="label-to-right">AniDB - Latest Ended</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anidb_best-of-10s">
+                     <input type="checkbox" id="anidb_best-of-10s" name="anidb_best-of-10s"> <span class="label-to-right">AniDB - Best of 10s</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anidb_best-of-00s">
+                     <input type="checkbox" id="anidb_best-of-00s" name="anidb_best-of-00s"> <span class="label-to-right">AniDB - Best of 00s</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anidb_best-of-90s">
+                     <input type="checkbox" id="anidb_best-of-90s" name="anidb_best-of-90s"> <span class="label-to-right">AniDB - Best of 90s</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anidb_best-of-80s">
+                     <input type="checkbox" id="anidb_best-of-80s" name="anidb_best-of-80s"> <span class="label-to-right">AniDB - Best of 80s</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anilist_trending-now">
+                     <input type="checkbox" id="anilist_trending-now" name="anilist_trending-now"> <span class="label-to-right">AniList - Trending Now</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anilist_popular-this-season">
+                     <input type="checkbox" id="anilist_popular-this-season" name="anilist_popular-this-season"> <span class="label-to-right">AniList - Popular This Season</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anilist_upcoming-next-season">
+                     <input type="checkbox" id="anilist_upcoming-next-season" name="anilist_upcoming-next-season"> <span class="label-to-right">AniList - Upcoming Next Season</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anilist_all-time-popular">
+                     <input type="checkbox" id="anilist_all-time-popular" name="anilist_all-time-popular"> <span class="label-to-right">AniList - All Time Popular</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="anilist_top-100-anime">
+                     <input type="checkbox" id="anilist_top-100-anime" name="anilist_top-anime"> <span class="label-to-right">AniList - Top Anime</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="kitsu_top-airing">
+                     <input type="checkbox" id="kitsu_top-airing" name="kitsu_top-airing"> <span class="label-to-right">Kitsu - Top Airing</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="kitsu_most-popular">
+                     <input type="checkbox" id="kitsu_most-popular" name="kitsu_most-popular"> <span class="label-to-right">Kitsu - Most Popular</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="kitsu_highest-rated">
+                     <input type="checkbox" id="kitsu_highest-rated" name="kitsu_highest-rated"> <span class="label-to-right">Kitsu - Highest Rated</span>
+                  </label>
+               </div>
+               
+               <div class="form-element">
+                  <label for="kitsu_newest">
+                     <input type="checkbox" id="kitsu_newest" name="kitsu_newest"> <span class="label-to-right">Kitsu - Newest</span>
+                  </label>
+               </div>
+               
+            </form>
+
+            <div class="separator"></div>
+            
+
+         <a id="installLink" class="install-link" href="#">
+            <button name="Install">INSTALL</button>
+         </a>
+         
+      </div>
+      <script>
+         
+            installLink.onclick = () => {
+               return mainForm.reportValidity()
+            }
+            const updateLink = () => {
+               const config = Object.fromEntries(new FormData(mainForm))
+               installLink.href = 'stremio://' + window.location.host + '/' + encodeURIComponent(JSON.stringify(config)) + '/manifest.json'
+            }
+            mainForm.onchange = updateLink
+         
+
+         if (typeof updateLink === 'function')
+            updateLink()
+         else
+            installLink.href = 'stremio://' + window.location.host + '/manifest.json'
+      </script>
+	</body>
+
+	</html>
