@@ -9,7 +9,7 @@ const isDubbed = require('./dubbed')
 
 const config = {
     skipSize: 50,
-    maxSkip: 2000,
+    maxSkip: 3000,
     lists: {
         'Top Airing': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-airing',
         'Most Popular': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-popular',

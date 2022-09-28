@@ -12,7 +12,7 @@ const isDubbed = require('./dubbed')
 const config = {
     linkPattern: 'https:\\/\\/myanimelist\\.net\\/anime\\/([0-9]+)\\/(.*)',
     skipSize: 50,
-    maxSkip: 2000,
+    maxSkip: 3500,
     lists: {
         'Top All Time': 'https://myanimelist.net/topanime.php?limit={skip}',
         'Top Airing': 'https://myanimelist.net/topanime.php?type=airing&limit={skip}',

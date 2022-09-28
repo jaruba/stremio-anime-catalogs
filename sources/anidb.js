@@ -12,7 +12,7 @@ needle.defaults(helpers.needleDefaults)
 const config = {
     linkPattern: '\\/anime\\/([0-9]+)',
     skipSize: 1,
-    maxSkip: 21,
+    maxSkip: 27,
     lists: {
         'Popular': 'https://anidb.net/latest/anime/popular',
         'Latest Started': 'https://anidb.net/anime/season',
