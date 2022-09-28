@@ -9,7 +9,7 @@ needle.defaults(helpers.needleDefaults)
 let map
 
 try {
-	map = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'map.json')))
+	map = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'map.json')))
 } catch(e) {
 	map = { mal: {}, anilist: {}, anidb: {}, }
 }
@@ -17,7 +17,7 @@ try {
 let guessed
 
 try {
-	guessed = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'guessed.json')))
+	guessed = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'guessed.json')))
 } catch(e) {
 	guessed = { mal: [], anilist: [], anidb: [], }
 }
@@ -25,7 +25,7 @@ try {
 let missing
 
 try {
-	missing = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'missing.json')))
+	missing = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'missing.json')))
 } catch(e) {
 	missing = { mal: [], anilist: [], anidb: [], }
 }
@@ -33,17 +33,17 @@ try {
 let kitsuCache = {}
 
 try {
-	kitsuCache = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'kitsuCache.json')))
+	kitsuCache = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'kitsuCache.json')))
 } catch(e) {
 	kitsuCache = {}
 }
 
 const saveCacheToFile = (cb) => {
 	helpers.log('mapping', '--- saving cache to file ---')
-	fs.writeFileSync(path.join(__dirname, 'public', 'map.json'), JSON.stringify(map))
-	fs.writeFileSync(path.join(__dirname, 'public', 'missing.json'), JSON.stringify(missing))
-	fs.writeFileSync(path.join(__dirname, 'public', 'guessed.json'), JSON.stringify(guessed))
-	fs.writeFileSync(path.join(__dirname, 'public', 'kitsuCache.json'), JSON.stringify(kitsuCache))
+	fs.writeFileSync(path.join(__dirname, 'db', 'map.json'), JSON.stringify(map))
+	fs.writeFileSync(path.join(__dirname, 'db', 'missing.json'), JSON.stringify(missing))
+	fs.writeFileSync(path.join(__dirname, 'db', 'guessed.json'), JSON.stringify(guessed))
+	fs.writeFileSync(path.join(__dirname, 'db', 'kitsuCache.json'), JSON.stringify(kitsuCache))
 	setTimeout(() => {
 		saveCacheToFile()
 	}, addonConfig.saveMapInterval)

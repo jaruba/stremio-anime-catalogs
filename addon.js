@@ -11,6 +11,8 @@ addon.use(cors())
 
 addon.use(express.static('public'))
 
+addon.use(express.static('db'))
+
 const services = {
     myanimelist: require('./sources/mal'),
     anidb: require('./sources/anidb'),

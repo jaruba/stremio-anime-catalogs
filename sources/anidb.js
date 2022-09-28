@@ -29,7 +29,7 @@ const staticLists = {}
 
 Object.keys(config.lists).forEach(key => {
 	try {
-		staticLists[helpers.serialize(key)] = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'public', 'anidb_' + helpers.serialize(key) + '.json')))
+		staticLists[helpers.serialize(key)] = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'db', 'anidb_' + helpers.serialize(key) + '.json')))
 	} catch(e) {
 		staticLists[helpers.serialize(key)] = []
 	}
@@ -57,7 +57,7 @@ const populateQueue = async.queue((task, cb) => {
 	const tempList = []
     const finishedList = () => {
 		staticLists[task.key] = tempList
-		fs.writeFileSync(path.join(__dirname, '..', 'public', 'anidb_' + task.key + '.json'), JSON.stringify(staticLists[task.key]))
+		fs.writeFileSync(path.join(__dirname, '..', 'db', 'anidb_' + task.key + '.json'), JSON.stringify(staticLists[task.key]))
 		setTimeout(() => { cb() }, addonConfig.anidbCooldown)
         const allLists = Object.keys(config.lists)
         const lastListKey = helpers.serialize(allLists[allLists.length -1])
