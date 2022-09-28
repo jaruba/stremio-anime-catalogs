@@ -55,9 +55,10 @@ setTimeout(() => {
 
 const mapper = (query, opts, cb) => {
 	const idType = (Object.keys(opts) || [])[0]
-	if (idType && map[idType] && map[idType][opts[idType]]) {
+	const cachedId = (map[idType] || {})[opts[idType]]
+	if (idType && cachedId && kitsuCache[foundId]) {
 		helpers.log('mapping', 'served ' + idType + ' ' + opts[idType] + ' from cache')
-		const foundId = map[idType][opts[idType]]
+		const foundId = cachedId
 		cb(foundId, kitsuCache[foundId], true, opts[idType])
 		return
 	}
@@ -208,6 +209,35 @@ module.exports = {
 				helpers.log('mapping', 'FAILED to match "' + task.query + '"')
 			}
 			cb(resp.id, resp.meta, resp.initId)
+		})
+	},
+	toKitsuId: (opts) => {
+		return new Promise((resolve, reject) => {
+			const idType = Object.keys(opts)[0]
+			const cachedId = (map[idType] || {})[opts[idType]]
+			if (cachedId) {
+				return resolve({ kitsuId: cachedId, fromCache: true })
+			}
+			const yunaType = idType === 'mal' ? 'myanimelist' : idType
+			helpers.log('link', 'https://relations.yuna.moe/api/ids?source=' + yunaType + '&id=' + opts[idType])
+			needle.get('https://relations.yuna.moe/api/ids?source=' + yunaType + '&id=' + opts[idType], (err, resp, body) => {
+				if ((body || {}).kitsu) {
+					if (map[idType] && !map[idType][opts[idType]])
+						map[idType][opts[idType]] = body.kitsu
+					return resolve({ kitsuId: body.kitsu })
+				}
+				const kitsuType = idType === 'mal' ? 'myanimelist/anime' : (idType === 'anilist' ? 'anilist/anime' : idType)
+				helpers.log('link', 'https://kitsu.io/api/edge/mappings?filter[externalSite]=' + kitsuType + '&filter[externalId]=' + opts[idType] + '&include=item')
+				needle.get('https://kitsu.io/api/edge/mappings?filter[externalSite]=' + kitsuType + '&filter[externalId]=' + opts[idType] + '&include=item', (err, resp, body) => {
+					if ((((body || {}).included || [])[0] || {}).id) {
+						if (map[idType] && !map[idType][opts[idType]])
+							map[idType][opts[idType]] = body.included[0].id
+						return resolve({ kitsuId: body.included[0].id })
+					}
+					resolve({ kitsuId: false })
+				})
+			})
+
 		})
 	},
 	map: () => map,

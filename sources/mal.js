@@ -7,11 +7,12 @@ const fs = require('fs')
 const path = require('path')
 const addonConfig = require('../config')
 needle.defaults(helpers.needleDefaults)
+const isDubbed = require('./dubbed')
 
 const config = {
     linkPattern: 'https:\\/\\/myanimelist\\.net\\/anime\\/([0-9]+)\\/(.*)',
     skipSize: 50,
-    maxSkip: 1800,
+    maxSkip: 2000,
     lists: {
         'Top All Time': 'https://myanimelist.net/topanime.php?limit={skip}',
         'Top Airing': 'https://myanimelist.net/topanime.php?type=airing&limit={skip}',
@@ -37,12 +38,15 @@ Object.keys(config.lists).forEach(key => {
 module.exports = {
 	name: 'MyAnimeList',
 	catalogs: Object.keys(config.lists),
-	handle: (listKey, skip, genre) => {
+	handle: (listKey, skip, genre, onlyDubs) => {
 		const fullList = staticLists[listKey] || []
 		let filteredList = fullList
 		if (genre) {
 			filteredList = filteredList.filter(el => (el.genres || []).includes(genre))
 		}
+        if (onlyDubs) {
+            filteredList = filteredList.filter(el => isDubbed(parseInt((el.id || '').replace('kitsu:',''))))
+        }
 		if (skip) {
 			filteredList = filteredList.slice(skip, skip + pageSize)
 		} else {

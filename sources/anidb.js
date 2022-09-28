@@ -5,6 +5,7 @@ const helpers = require('../helpers')
 const mapping = require('../mapping')
 const fs = require('fs')
 const path = require('path')
+const isDubbed = require('./dubbed')
 const addonConfig = require('../config')
 needle.defaults(helpers.needleDefaults)
 
@@ -38,12 +39,15 @@ Object.keys(config.lists).forEach(key => {
 module.exports = {
 	name: 'AniDB',
 	catalogs: Object.keys(config.lists),
-	handle: (listKey, skip, genre) => {
+	handle: (listKey, skip, genre, onlyDubs) => {
 		const fullList = staticLists[listKey] || []
 		let filteredList = fullList
 		if (genre) {
 			filteredList = filteredList.filter(el => (el.genres || []).includes(genre))
 		}
+        if (onlyDubs) {
+            filteredList = filteredList.filter(el => isDubbed(parseInt((el.id || '').replace('kitsu:',''))))
+        }
 		if (skip) {
 			filteredList = filteredList.slice(skip, skip + pageSize)
 		} else {

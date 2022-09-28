@@ -38,7 +38,7 @@ userOptions.forEach(el => {
             catalogs.push({
                 id: el.key + '_' + helpers.serialize(catalog),
                 type: 'anime',
-                name: services[el.key].name + ' ' + catalog,
+                name: catalog + ' ' + services[el.key].name,
                 extra:[
                     {
                         name: 'genre',
@@ -93,16 +93,24 @@ addon.get('/:catalogChoices/manifest.json', function (req, res) {
     }
     const manifestClone = JSON.parse(JSON.stringify(manifest))
     Object.keys(catalogChoices).forEach(key => {
+        if (key === 'dubbed') return
         const catalogChoice = catalogChoices[key]
         if (catalogChoice == 'on') {
             const catalog = catalogs.find(el => {
                 return el.id === key
             })
             if (catalog) {
-                manifestClone.catalogs.push(catalog)
+                manifestClone.catalogs.push(Object.assign({}, catalog))
             }
         }
     })
+    if (catalogChoices['dubbed']) {
+        manifestClone.name = 'Dubbed ' + manifestClone.name
+        manifestClone.catalogs = manifestClone.catalogs.map(el => {
+            el.name = 'Dubbed ' + el.name
+            return el
+        })
+    }
     if (catalogChoices['search']) {
         manifestClone.catalogs.push({
             id: 'anime-catalogs-search',
@@ -134,6 +142,15 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
         res.redirect(307, 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-list/search=' + encodeURIComponent(search) + '.json')
         return
     }
+    let catalogChoices
+    if (req.params.catalogChoices) {
+        try {
+            catalogChoices = JSON.parse(req.params.catalogChoices)
+        } catch(e) {
+            catalogChoices = {}
+        }
+    }
+    const onlyDub = !!catalogChoices['dubbed']
     const idParts = req.params.id.split('_')
     const lstType = idParts[0]
     const catType = idParts[1]
@@ -141,7 +158,7 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
     const skip = parseInt(extra.skip || 0)
     const genre = extra.genre
     if (services[lstType]) {
-        resp = services[lstType].handle(catType, skip, genre)
+        resp = services[lstType].handle(catType, skip, genre, onlyDub)
         if (!resp) {
             res.writeHead(500)
             res.end(JSON.stringify({ err: 'catalog invalid response' }))

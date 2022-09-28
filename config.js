@@ -8,4 +8,5 @@ module.exports = {
 	malCooldown: 2 * 1000, // 2s
 	anidbCooldown: 2 * 1000, // 2s
 	anilistCooldown: 1 * 1000, // 1s
+	kitsuCooldown: 2 * 1000, // 2s
 }

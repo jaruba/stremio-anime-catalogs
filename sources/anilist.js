@@ -6,6 +6,7 @@ const mapping = require('../mapping')
 const fs = require('fs')
 const path = require('path')
 const addonConfig = require('../config')
+const isDubbed = require('./dubbed')
 
 const config = {
     skipSize: 1,
@@ -86,11 +87,14 @@ const extraVariables = {
 module.exports = {
     name: 'AniList',
 	catalogs: Object.keys(config.lists),
-    handle: (listKey, skip, genre) => {
+    handle: (listKey, skip, genre, onlyDubs) => {
         const fullList = staticLists[listKey] || []
         let filteredList = fullList
         if (genre) {
             filteredList = filteredList.filter(el => (el.genres || []).includes(genre))
+        }
+        if (onlyDubs) {
+            filteredList = filteredList.filter(el => isDubbed(parseInt((el.id || '').replace('kitsu:',''))))
         }
         if (skip) {
             filteredList = filteredList.slice(skip, skip + pageSize)
