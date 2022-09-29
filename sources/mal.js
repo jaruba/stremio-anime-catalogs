@@ -14,12 +14,12 @@ const config = {
     skipSize: 50,
     maxSkip: 3500,
     lists: {
-        'Top All Time': 'https://myanimelist.net/topanime.php?limit={skip}',
-        'Top Airing': 'https://myanimelist.net/topanime.php?type=airing&limit={skip}',
-        'Top Series': 'https://myanimelist.net/topanime.php?type=tv&limit={skip}',
-        'Top Movies': 'https://myanimelist.net/topanime.php?type=movie&limit={skip}',
-        'Popular': 'https://myanimelist.net/topanime.php?type=bypopularity&limit={skip}',
-        'Most Favorited': 'https://myanimelist.net/topanime.php?type=favorite&limit={skip}',
+        'Top All Time': 'https://myanimelist.net/topanime.php?limit={skip}', // max: 12000 (under 5 stars)
+        'Top Airing': 'https://myanimelist.net/topanime.php?type=airing&limit={skip}', // max: 50
+        'Top Series': 'https://myanimelist.net/topanime.php?type=tv&limit={skip}', // max: 4200 (under 5 stars)
+        'Top Movies': 'https://myanimelist.net/topanime.php?type=movie&limit={skip}', // max: 2000 (under 5 stars)
+        'Popular': 'https://myanimelist.net/topanime.php?type=bypopularity&limit={skip}', // max: 10000 (strange results after)
+        'Most Favorited': 'https://myanimelist.net/topanime.php?type=favorite&limit={skip}', // max: 10000 (strange results after)
     }
 }
 
@@ -123,6 +123,7 @@ const populateQueue = async.queue((task, cb) => {
 			} else {
 				helpers.log('mal', '---')
 				helpers.log('mal', '---')
+				console.log('err or empty body in mal')
 				console.log(err)
 				helpers.log('mal', 'warning: could not get page: ' + pageUrl)
 				helpers.log('mal', 'waiting 2s and skipping current list')

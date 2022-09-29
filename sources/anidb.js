@@ -17,10 +17,10 @@ const config = {
         'Popular': 'https://anidb.net/latest/anime/popular',
         'Latest Started': 'https://anidb.net/anime/season',
         'Latest Ended': 'https://anidb.net/anime/season/?calendar.mode=1',
-        'Best of 10s': 'https://anidb.net/anime/?airdate.end=2020-01-01&airdate.start=2010-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}',
-        'Best of 00s': 'https://anidb.net/anime/?airdate.end=2010-01-01&airdate.start=2000-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}',
-        'Best of 90s': 'https://anidb.net/anime/?airdate.end=2000-01-01&airdate.start=1990-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}',
-        'Best of 80s': 'https://anidb.net/anime/?airdate.end=1990-01-01&airdate.start=1980-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}',
+        'Best of 10s': 'https://anidb.net/anime/?airdate.end=2020-01-01&airdate.start=2010-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}', // max: 29 (no results after this page)
+        'Best of 00s': 'https://anidb.net/anime/?airdate.end=2010-01-01&airdate.start=2000-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}', // max: 27 (no results after this page)
+        'Best of 90s': 'https://anidb.net/anime/?airdate.end=2000-01-01&airdate.start=1990-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}', // max: 5 (no results after this page)
+        'Best of 80s': 'https://anidb.net/anime/?airdate.end=1990-01-01&airdate.start=1980-01-01&airing=2&do.search=1&h=1&orderby.rating=0.2&votes=1000&page={skip}', // max: 1 (no results after this page)
     }
 }
 
@@ -136,6 +136,7 @@ const populateQueue = async.queue((task, cb) => {
 			} else {
 				helpers.log('anidb', '---')
 				helpers.log('anidb', '---')
+				console.log('err or empty body in anilist')
 				console.log(err)
 				helpers.log('anidb', 'warning: could not get page: ' + pageUrl)
 				helpers.log('anidb', 'waiting 1s and skipping current list')

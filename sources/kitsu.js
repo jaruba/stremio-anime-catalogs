@@ -11,10 +11,10 @@ const config = {
     skipSize: 50,
     maxSkip: 3000,
     lists: {
-        'Top Airing': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-airing',
-        'Most Popular': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-popular',
-        'Highest Rated': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-rating',
-        'Newest': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-newest',
+        'Top Airing': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-airing', // max: 200 (no results after this)
+        'Most Popular': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-popular', // max: ?? (no known limit)
+        'Highest Rated': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-rating', // max: ?? (no known limit)
+        'Newest': 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-newest', // max: ?? (no known limit)
     }
 }
 
@@ -82,7 +82,10 @@ const populateQueue = async.queue((task, cb) => {
             } else {
                 helpers.log('kitsu', '---')
                 helpers.log('kitsu', '---')
-                console.log(err)
+                if (!body || err) {
+                    console.log('err or empty body in kitsu')
+                    console.log(err)
+                }
                 helpers.log('kitsu', 'warning: could not get page: ' + pageUrl)
                 helpers.log('kitsu', 'waiting 2s and skipping current list')
                 finishedList()

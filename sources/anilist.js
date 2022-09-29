@@ -149,7 +149,10 @@ const populateQueue = async.queue((task, cb) => {
             variables,
             headers,
             timeout: 20000,
-        }).catch((err) => console.log(err.message))
+        }).catch((err) => {
+            console.log('err in anilist')
+            console.log(err.message)
+        })
 
         let lastAnilistId = 0
 
