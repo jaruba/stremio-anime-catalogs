@@ -60,7 +60,7 @@ const manifest = {
     version: '1.0.2',
 
     name: 'Anime Catalogs',
-    description: 'Stremio catalogs for anime from: ' + userOptions.map(el => el.name).join(', '),
+    description: 'Stremio catalogs for anime from: ' + userOptions.map(el => el.name).join(', ') + '. Also supports filtering by dubbed and optional setting to use Rating Posters from RPDB.',
     background: 'https://1fe84bc728af-stremio-anime-catalogs.baby-beamup.club/addon-background.jpg',
     logo: 'https://1fe84bc728af-stremio-anime-catalogs.baby-beamup.club/addon-logo.png',
 

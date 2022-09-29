@@ -1,7 +1,7 @@
 {
   "name": "stremio-anime-catalogs",
   "version": "1.0.2",
-  "description": "Stremio catalogs for anime from: MyAnimeList, AniDB, AniList, Kitsu",
+  "description": "Stremio catalogs for anime from: MyAnimeList, AniDB, AniList, Kitsu. Also supports filtering by dubbed and optional setting to use Rating Posters from RPDB.",
   "main": "addon.js",
   "scripts": {
     "start": "node addon.js"
