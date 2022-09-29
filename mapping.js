@@ -55,11 +55,13 @@ setTimeout(() => {
 
 const mapper = (query, opts, cb) => {
 	const idType = (Object.keys(opts) || [])[0]
-	const cachedId = (map[idType] || {})[opts[idType]]
-	if (idType && cachedId && kitsuCache[cachedId]) {
-		helpers.log('mapping', 'served ' + idType + ' ' + opts[idType] + ' from cache')
-		cb(cachedId, kitsuCache[cachedId], true, opts[idType])
-		return
+	if (idType) {
+		const cachedId = (map[idType] || {})[opts[idType]]
+		if (cachedId && kitsuCache[cachedId]) {
+			helpers.log('mapping', 'served ' + idType + ' ' + opts[idType] + ' from cache')
+			cb(cachedId, kitsuCache[cachedId], true, opts[idType])
+			return
+		}
 	}
 	helpers.log('mapping', 'Searching for "' + query + '" with options: ' + JSON.stringify(opts))
 	const kitsuSearchUrl = 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-list/search=' + encodeURIComponent(query) + '.json'
