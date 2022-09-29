@@ -23,6 +23,12 @@ const config = {
     }
 }
 
+// mal needs more flexible page limits
+const maxSkip = {
+    'Top Airing': 50, // max: 50
+    'Top Movies': 2000, // max: 2000 (under 5 stars)
+}
+
 const pageSize = 100
 
 const staticLists = {}
@@ -98,7 +104,7 @@ const populateQueue = async.queue((task, cb) => {
 									// finished page
 									helpers.log('mal', '---')
 									helpers.log('mal', 'finished page')
-									if (skip < config.maxSkip && url.includes('{skip}')) {
+									if (skip < (task.maxSkip || config.maxSkip) && url.includes('{skip}')) {
 										setTimeout(() => {
 											pageGet(task.url, skip + config.skipSize)
 										}, addonConfig.malCooldown)
@@ -138,7 +144,7 @@ const populateQueue = async.queue((task, cb) => {
 const populate = () => {
 	Object.keys(config.lists).forEach(key => {
 		const url = config.lists[key]
-		populateQueue.push({ key: helpers.serialize(key), url })
+		populateQueue.push({ key: helpers.serialize(key), url, maxSkip: maxSkip[key] })
 	})
 	setTimeout(() => {
 		populate()
