@@ -108,7 +108,7 @@ button:active {
 }
 
 #addon {
-   width: 40vh;
+   width: 50vh;
    margin: auto;
 }
 
@@ -187,7 +187,7 @@ button:active {
          <div class="logo">
             <img src="https://1fe84bc728af-stremio-anime-catalogs.baby-beamup.club/addon-logo.png">
          </div>
-         <h1 class="name">Anime Catalogs</h1>
+         <h1 class="name" style="display: block">Anime Catalogs</h1>
          <h2 class="version">v1.0.2</h2>
          <h2 class="description">Stremio catalogs for anime from: MyAnimeList, AniDB, AniList, Kitsu</h2>
 
@@ -210,6 +210,13 @@ button:active {
                   <label for="dubbed">
                      <input type="checkbox" id="dubbed" name="dubbed"> <span class="label-to-right">Show Only Dubbed Content</span>
                   </label>
+               </div>
+               <div class="form-element">
+                  <label for="ratings">
+                     <input type="checkbox" id="ratings" name="ratings"> <span class="label-to-right">Ratings on Posters (requires RPDB key)</span>
+                  </label>
+               </div>
+               <div id="rpdb-data">
                </div>
                         <div class="separator"></div>
 
@@ -381,6 +388,23 @@ button:active {
             updateLink()
          else
             installLink.href = 'stremio://' + window.location.host + '/manifest.json'
+
+         const checkbox = document.getElementById('ratings')
+
+         checkbox.addEventListener('change', (event) => {
+          const rpdbSettings = document.getElementById('rpdb-data')
+           if (event.currentTarget.checked) {
+             rpdbSettings.innerHTML = `
+             <div class="form-element">
+               <div class="label-to-top">RPDB API Key (get it from <a href="https://ratingposterdb.com/" target="_blank">RatingPosterDB</a>)</div>
+               <input type="input" id="rpdbkey" name="rpdbkey" class="full-width" required/>
+            </div>
+            `;
+
+           } else {
+             rpdbSettings.innerHTML = ''
+           }
+         })
       </script>
 	</body>
 

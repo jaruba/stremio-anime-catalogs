@@ -4,6 +4,7 @@ const qs = require('querystring')
 const addon = express()
 const path = require('path')
 const addonConfig = require('./config')
+const rpdb = require('./rpdb')
 
 const helpers = require('./helpers')
 
@@ -173,6 +174,10 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
             res.end(JSON.stringify({ err: 'catalog empty response' }))
             return
         }
+
+        if (catalogChoices['rpdbkey'])
+            resp.metas = resp.metas.map(el => rpdb(el, catalogChoices['rpdbkey']))
+
         let cacheHeaders = {
             cacheMaxAge: 'max-age',
             staleRevalidate: 'stale-while-revalidate',

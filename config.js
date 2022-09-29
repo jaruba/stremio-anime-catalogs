@@ -1,6 +1,6 @@
 module.exports = {
-	verbose: false, // for debugging
-	scanOnStart: true,
+	verbose: true, // for debugging
+	scanOnStart: false,
 	listUpdateInterval: 12 * 60 * 60 * 1000, // 12h
 	saveMapInterval: 3 * 60 * 60 * 1000, // 3h
 	cacheMaxAge: 6 * 60 * 60, // 6h
