@@ -112,7 +112,7 @@ const populateQueue = async.queue((task, cb) => {
 										// finished list
 										helpers.log('mal', '---')
 										helpers.log('mal', '---')
-										helpers.log('mal', 'finished list by reaching max skip allowed (or list does not support skip): ' + config.maxSkip)
+										helpers.log('mal', 'finished list by reaching max skip allowed (or list does not support skip): ' + (task.maxSkip || config.maxSkip))
 										finishedList()
 									}
 								}
