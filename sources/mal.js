@@ -151,4 +151,5 @@ const populate = () => {
 	}, addonConfig.listUpdateInterval)
 }
 
-populate()
+if (addonConfig.scanOnStart)
+    populate()
