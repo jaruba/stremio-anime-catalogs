@@ -399,10 +399,30 @@ button:active {
                <div class="label-to-top">RPDB API Key (get it from <a href="https://ratingposterdb.com/" target="_blank">RatingPosterDB</a>)</div>
                <input type="input" id="rpdbkey" name="rpdbkey" class="full-width" required/>
             </div>
-            `;
-
+            `
+            var rpdbInput = document.getElementById('rpdbkey')
+            rpdbInput.addEventListener('blur', () => {
+               const apiKey = rpdbInput.value
+               if (!apiKey) return
+               fetch('https://api.ratingposterdb.com/' + apiKey + '/isValid')
+                 .then(async (resp) => {
+                     let data
+                     try {
+                        data = await resp.json()
+                     } catch(e) {
+                        console.error(e)
+                     }
+                     if (!(data || {}).valid) {
+                        alert('RPDB Key is invalid, please try again')
+                        rpdbInput.value = ''
+                     }
+                 })
+                 .catch(e => {
+                     console.error(e)
+                 })
+            }, true)
            } else {
-             rpdbSettings.innerHTML = ''
+               rpdbSettings.innerHTML = ''
            }
          })
       </script>
