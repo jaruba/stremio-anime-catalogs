@@ -49,7 +49,6 @@ userOptions.forEach(el => {
                         name:'skip',
                     }
                 ],
-                genres,
             })
         })
     }
