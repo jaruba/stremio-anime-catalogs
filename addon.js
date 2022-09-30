@@ -56,7 +56,7 @@ userOptions.forEach(el => {
 
 const manifest = { 
     id: 'org.stremio.animecatalogs',
-    version: '1.0.2',
+    version: '1.0.3',
 
     name: 'Anime Catalogs',
     description: 'Stremio catalogs for anime from: ' + userOptions.map(el => el.name).join(', ') + '. Also supports filtering by dubbed and optional setting to use Rating Posters from RPDB.',
