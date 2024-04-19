@@ -5,6 +5,8 @@ module.exports = {
 		return text.toLowerCase().split(' ').join('-')
 	},
 	log: (from, text) => {
+		if (addonConfig.ignoreMappingLogs && from === 'mapping') return;
+		if (addonConfig.ignoreDubbedLogs && from === 'dubbed') return;
 		if (addonConfig.verbose)
 			console.log('[' + from + '] ' + text)
 	},

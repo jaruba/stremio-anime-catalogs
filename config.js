@@ -1,5 +1,7 @@
 module.exports = {
 	verbose: false, // for debugging
+	ignoreMappingLogs: true,
+	ignoreDubbedLogs: true,
 	scanOnStart: true,
 	listUpdateInterval: 12 * 60 * 60 * 1000, // 12h
 	saveMapInterval: 3 * 60 * 60 * 1000, // 3h
