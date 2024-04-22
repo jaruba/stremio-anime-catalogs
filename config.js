@@ -1,7 +1,5 @@
 module.exports = {
-	verbose: false, // for debugging
-	ignoreMappingLogs: true,
-	ignoreDubbedLogs: true,
+	verbose: true, // for debugging
 	scanOnStart: true,
 	listUpdateInterval: 12 * 60 * 60 * 1000, // 12h
 	saveMapInterval: 3 * 60 * 60 * 1000, // 3h
@@ -10,6 +8,6 @@ module.exports = {
 	staleError: 24 * 60 * 60, // 24h
 	malCooldown: 2 * 1000, // 2s
 	anidbCooldown: 2 * 1000, // 2s
-	anilistCooldown: 4 * 1000, // 4s
+	anilistCooldown: 8 * 1000, // 3s
 	kitsuCooldown: 2 * 1000, // 2s
 }
