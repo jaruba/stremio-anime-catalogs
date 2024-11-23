@@ -10,6 +10,6 @@ module.exports = {
 	staleError: 24 * 60 * 60, // 24h
 	malCooldown: 2 * 1000, // 2s
 	anidbCooldown: 2 * 1000, // 2s
-	anilistCooldown: 8 * 1000, // 3s
+	anilistCooldown: 15 * 1000, // 15s
 	kitsuCooldown: 2 * 1000, // 2s
 }
