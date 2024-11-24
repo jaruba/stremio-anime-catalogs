@@ -3,6 +3,7 @@ const helpers = require('./helpers')
 const async = require('async')
 const fs = require('fs')
 const path = require('path')
+const rpdb = require('./rpdb')
 const addonConfig = require('./config')
 needle.defaults(helpers.needleDefaults)
 
@@ -11,7 +12,7 @@ let map
 try {
 	map = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'map.json')))
 } catch(e) {
-	map = { mal: {}, anilist: {}, anidb: {}, }
+	map = { mal: {}, anilist: {}, anidb: {}, anisearch: {}, animeplanet: {}, livechart: {}, notifymoe: {}, }
 }
 
 let guessed
@@ -19,7 +20,7 @@ let guessed
 try {
 	guessed = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'guessed.json')))
 } catch(e) {
-	guessed = { mal: [], anilist: [], anidb: [], }
+	guessed = { mal: [], anilist: [], anidb: [], anisearch: [], animeplanet: [], livechart: [], notifymoe: [], }
 }
 
 let missing
@@ -27,8 +28,16 @@ let missing
 try {
 	missing = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'missing.json')))
 } catch(e) {
-	missing = { mal: [], anilist: [], anidb: [], }
+	missing = { mal: [], anilist: [], anidb: [], anisearch: [], animeplanet: [], livechart: [], notifymoe: [], }
 }
+
+const allTypes = ['mal', 'anilist', 'anidb', 'anisearch', 'animeplanet', 'livechart', 'notifymoe']
+
+allTypes.forEach(type => {
+	if (!map[type]) map[type] = {}
+	if (!guessed[type]) guessed[type] = []
+	if (!missing[type]) missing[type] = []
+})
 
 let kitsuCache = {}
 
@@ -78,6 +87,11 @@ const mapper = (query, opts, cb) => {
 			}
 			const firstId = ids[0]
 			const checkYunaMappings = (after) => {
+				if (!['mal', 'anilist', 'anidb'].includes(idType)) {
+					after()
+					return;
+					// following logic only works with mal, anilist and anidb
+				}
 				const yunaType = idType === 'mal' ? 'myanimelist' : idType
 				helpers.log('link', 'https://relations.yuna.moe/api/ids?source=' + yunaType + '&id=' + opts[idType])
 				needle.get('https://relations.yuna.moe/api/ids?source=' + yunaType + '&id=' + opts[idType], (err, resp, body) => {
@@ -96,7 +110,8 @@ const mapper = (query, opts, cb) => {
 				})
 			}
 			const checkMappings = () => {
-				if (ids.length) {
+				if (ids.length && ['mal', 'anilist', 'anidb'].includes(idType)) {
+					// this logic can only work with some specific id types
 					const id = ids[0]
 					ids.shift()
 					const kitsuMappingsUrl = 'https://kitsu.io/api/edge/anime/' + id + '?include=mappings'
@@ -219,6 +234,10 @@ module.exports = {
 			if (cachedId) {
 				return resolve({ kitsuId: cachedId, fromCache: true })
 			}
+			if (!['mal', 'anilist', 'anidb'].includes(idType)) {
+				return resolve({ kitsuId: false })
+				// following logic only works with mal, anilist and anidb
+			}
 			const yunaType = idType === 'mal' ? 'myanimelist' : idType
 			helpers.log('link', 'https://relations.yuna.moe/api/ids?source=' + yunaType + '&id=' + opts[idType])
 			needle.get('https://relations.yuna.moe/api/ids?source=' + yunaType + '&id=' + opts[idType], (err, resp, body) => {
@@ -246,3 +265,58 @@ module.exports = {
 	missing: () => missing,
 	kitsuCache: () => kitsuCache,
 }
+
+// update mappings from another source
+function updateMappingsList() {
+	needle.get('https://github.com/Fribb/anime-lists/raw/refs/heads/master/anime-list-full.json', { json: true, follow_max: 3 }, (err, resp, body) => {
+		if (!err && (resp || {}).statusCode === 200 && body) {
+			if (typeof body === 'string') {
+				try {
+					body = JSON.parse(body)
+				} catch(e) {}
+
+				if (Array.isArray(body) && body.length) {
+					function addNewId(idType, externalId, kitsuId, isSure) {
+						map[idType][externalId] = kitsuId
+						if (missing[idType].includes(externalId)) {
+							missing[idType].splice(missing[idType].indexOf(externalId), 1)
+						}
+						if (isSure) {
+							if (guessed[idType].includes(externalId)) {
+								guessed[idType].splice(guessed[idType].indexOf(externalId), 1)
+							}
+						}
+					}
+					body.forEach(el => {
+						if (el.kitsu_id) {
+							if (el.mal_id)
+								addNewId('mal', el.mal_id, el.kitsu_id, true)
+							if (el.anilist_id)
+								addNewId('anilist', el.anilist_id, el.kitsu_id, true)
+							if (el.anidb_id)
+								addNewId('anidb', el.anilist_id, el.kitsu_id, true)
+							if (el.anisearch_id)
+								addNewId('anisearch', el.anisearch_id, el.kitsu_id, true)
+							if (el['anime-planet_id'])
+								addNewId('animeplanet', el['anime-planet_id'], el.kitsu_id, true)
+							if (el.livechart_id)
+								addNewId('livechart', el.livechart_id, el.kitsu_id, true)
+							if (el['notify.moe_id'])
+								addNewId('notifymoe', el['notify.moe_id'], el.kitsu_id, true)
+							if (el.imdb_id && el.imdb_id.toLowerCase() !== 'unknown' && el.imdb_id.startsWith('tt'))
+								rpdb.setKitsuToImdbId(el.kitsu_id, el.imdb_id)
+						}
+					})
+					helpers.log('id lists', 'finished updating id lists')
+				} else {
+					helpers.log('id lists', 'could not update id lists')
+				}
+			}
+		}
+	})
+	setTimeout(() => {
+		updateMappingsList()
+	}, addonConfig.updateMappingsFromSource)
+}
+
+updateMappingsList()

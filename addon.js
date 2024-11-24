@@ -19,6 +19,10 @@ const services = {
     anidb: require('./sources/anidb'),
     anilist: require('./sources/anilist'),
     kitsu: require('./sources/kitsu'),
+    anisearch: require('./sources/anisearch'),
+//    animeplanet: require('./sources/animeplanet'),
+    livechart: require('./sources/livechart'),
+    notifymoe: require('./sources/notifymoe'),
 }
 
 const userOptions = Object.keys(services).map(key => {
@@ -174,8 +178,8 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
             return
         }
 
-        if (catalogChoices['rpdbkey'])
-            resp.metas = resp.metas.map(el => rpdb(el, catalogChoices['rpdbkey']))
+        // we use metahub otherwise as kitsu posters can break in time
+        resp.metas = resp.metas.map(el => rpdb.convert(el, catalogChoices['rpdbkey']))
 
         let cacheHeaders = {
             cacheMaxAge: 'max-age',

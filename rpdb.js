@@ -13,6 +13,9 @@ try {
     toImdb = {}
 }
 
+// second source for conversion
+const toImdb2 = {}
+
 const isObject = obj => { return typeof obj === 'object' && !Array.isArray(obj) }
 
 const populate = () => {
@@ -37,17 +40,25 @@ if (addonConfig.scanOnStart)
 
 const kitsuToImdb = (kitsuId) => {
 	if (!kitsuId) return false
-	return (toImdb[kitsuId] || {}).imdb_id || false
+	return toImdb2[kitsuId] || (toImdb[kitsuId] || {}).imdb_id || false
 }
 
-module.exports = (meta, rpdbKey) => {
-	const kitsuId = (meta.id || '').replace('kitsu:', '')
-	const imdbId = kitsuToImdb(kitsuId)
-	if (imdbId) {
-		// clone object first
-		const newMeta = JSON.parse(JSON.stringify(meta))
-		newMeta.poster = 'https://api.ratingposterdb.com/' + rpdbKey + '/imdb/poster-default/' + imdbId + '.jpg?fallback=true'
-		return newMeta
-	}
-	return meta
+module.exports = {
+	convert: (meta, rpdbKey) => {
+		const kitsuId = (meta.id || '').replace('kitsu:', '')
+		const imdbId = kitsuToImdb(kitsuId)
+		if (imdbId) {
+			// clone object first
+			const newMeta = JSON.parse(JSON.stringify(meta))
+			if (rpdbKey)
+				newMeta.poster = 'https://api.ratingposterdb.com/' + rpdbKey + '/imdb/poster-default/' + imdbId + '.jpg?fallback=true'
+			else
+				newMeta.poster = 'https://images.metahub.space/poster/small/' + imdbId + '/img'
+			return newMeta
+		}
+		return meta
+	},
+	setKitsuToImdbId: (kitsuId, imdbId) => {
+		toImdb2[kitsuId] = imdbId
+	},
 }

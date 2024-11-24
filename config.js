@@ -2,7 +2,7 @@ module.exports = {
 	verbose: false, // for debugging
 	ignoreMappingLogs: true,
 	ignoreDubbedLogs: true,
-	scanOnStart: true,
+	scanOnStart: false,
 	listUpdateInterval: 12 * 60 * 60 * 1000, // 12h
 	saveMapInterval: 3 * 60 * 60 * 1000, // 3h
 	cacheMaxAge: 6 * 60 * 60, // 6h
@@ -12,4 +12,8 @@ module.exports = {
 	anidbCooldown: 2 * 1000, // 2s
 	anilistCooldown: 15 * 1000, // 15s
 	kitsuCooldown: 2 * 1000, // 2s
+	aniseachCooldown: 5 * 1000, // 5s
+	animeplanetCooldown: 5 * 1000, // 5s
+	livechartCooldown: 5 * 1000, // 5s
+	updateMappingsFromSource: 6 * 60 * 60 * 1000, // 6h
 }
