@@ -44,18 +44,18 @@ const kitsuToImdb = (kitsuId) => {
 }
 
 module.exports = {
-	convert: (meta, rpdbKey) => {
+	convert: (meta, rpdbKey, kitsuPoster, kitsuEng) => {
 		const kitsuId = (meta.id || '').replace('kitsu:', '')
 		const imdbId = kitsuToImdb(kitsuId)
-		if (imdbId) {
-			// clone object first
-			const newMeta = JSON.parse(JSON.stringify(meta))
-			if (rpdbKey)
-				newMeta.poster = 'https://api.ratingposterdb.com/' + rpdbKey + '/imdb/poster-default/' + imdbId + '.jpg?fallback=true'
-			else
-				newMeta.poster = 'https://images.metahub.space/poster/small/' + imdbId + '/img'
-			return newMeta
-		}
+		// clone object first
+		const newMeta = JSON.parse(JSON.stringify(meta))
+		if (imdbId && rpdbKey)
+			newMeta.poster = 'https://api.ratingposterdb.com/' + rpdbKey + '/imdb/poster-default/' + imdbId + '.jpg?fallback=true'
+		else if (kitsuPoster)
+			newMeta.poster = kitsuPoster
+		if (kitsuEng)
+			newMeta.name = kitsuEng
+		return newMeta
 		return meta
 	},
 	setKitsuToImdbId: (kitsuId, imdbId) => {

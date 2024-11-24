@@ -47,12 +47,30 @@ try {
 	kitsuCache = {}
 }
 
+let kitsuPosters = {}
+
+try {
+	kitsuPosters = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'kitsuPosters.json')))
+} catch(e) {
+	kitsuPosters = {}
+}
+
+let kitsuEngTitles = {}
+
+try {
+	kitsuEngTitles = JSON.parse(fs.readFileSync(path.join(__dirname, 'db', 'kitsuEngTitles.json')))
+} catch(e) {
+	kitsuEngTitles = {}
+}
+
 const saveCacheToFile = (cb) => {
 	helpers.log('mapping', '--- saving cache to file ---')
 	fs.writeFileSync(path.join(__dirname, 'db', 'map.json'), JSON.stringify(map))
 	fs.writeFileSync(path.join(__dirname, 'db', 'missing.json'), JSON.stringify(missing))
 	fs.writeFileSync(path.join(__dirname, 'db', 'guessed.json'), JSON.stringify(guessed))
 	fs.writeFileSync(path.join(__dirname, 'db', 'kitsuCache.json'), JSON.stringify(kitsuCache))
+	fs.writeFileSync(path.join(__dirname, 'db', 'kitsuEngTitles.json'), JSON.stringify(kitsuEngTitles))
+	fs.writeFileSync(path.join(__dirname, 'db', 'kitsuPosters.json'), JSON.stringify(kitsuPosters))
 	setTimeout(() => {
 		saveCacheToFile()
 	}, addonConfig.saveMapInterval)
@@ -61,6 +79,21 @@ const saveCacheToFile = (cb) => {
 setTimeout(() => {
 	saveCacheToFile()
 }, addonConfig.saveMapInterval)
+
+function retrieveKitsuEngTitle(kitsuId) {
+	if (!kitsuEngTitles[kitsuId]) {
+		needle.get(`https://kitsu.io/api/edge/anime/${kitsuId}`, (err, resp, body) => {
+			if (!err && resp.statusCode === 200 && ((body || {}).data || {}).id) {
+				if (((body.data.attributes || {}).titles || {}).en || ((body.data.attributes || {}).titles || {}).en_us) {
+					kitsuEngTitles[kitsuId] = body.data.attributes.titles.en || body.data.attributes.titles.en_us
+				}
+				if (((body.data.attributes || {}).posterImage || {}).medium) {
+					kitsuPosters[kitsuId] = body.data.attributes.posterImage.medium
+				}
+			}
+		})
+	}
+}
 
 const mapper = (query, opts, cb) => {
 	const idType = (Object.keys(opts) || [])[0]
@@ -102,6 +135,7 @@ const mapper = (query, opts, cb) => {
 							helpers.log('mapping', '--- matched "' + query + '" through Yuna API')
 							map[idType][opts[idType]] = body.kitsu
 							kitsuCache[body.kitsu] = foundItem
+							retrieveKitsuEngTitle(body.kitsu)
 							cb(body.kitsu, kitsuCache[body.kitsu], false, opts[idType])
 							return
 						}
@@ -150,6 +184,7 @@ const mapper = (query, opts, cb) => {
 								}, 250)
 							} else {
 								kitsuCache[foundId] = searchResults.find(el => { return el.id === 'kitsu:' + foundId })
+								retrieveKitsuEngTitle(foundId)
 								cb(foundId, kitsuCache[foundId], false, opts[idType])
 							}
 						} else {
@@ -157,6 +192,7 @@ const mapper = (query, opts, cb) => {
 							guessed[idType].push(opts[idType])
 							map[idType][opts[idType]] = firstId
 							kitsuCache[firstId] = searchResults[0]
+							retrieveKitsuEngTitle(firstId)
 							cb(firstId, searchResults[0], false, opts[idType])
 						}
 					})
@@ -172,6 +208,7 @@ const mapper = (query, opts, cb) => {
 						helpers.log('mapping', '--- matched kitsu id by meta.name for "' + query + '"')
 						map[idType][opts[idType]] = idByExactName
 						kitsuCache[idByExactName] = searchResults.find(el => { return el.id === 'kitsu:' + idByExactName })
+						retrieveKitsuEngTitle(idByExactName)
 						cb(idByExactName, kitsuCache[idByExactName], false, opts[idType])
 						return
 					} else {
@@ -186,6 +223,7 @@ const mapper = (query, opts, cb) => {
 							helpers.log('mapping', '--- matched kitsu id by meta.alias for "' + query + '"')
 							map[idType][opts[idType]] = idByAlias
 							kitsuCache[idByAlias] = searchResults.find(el => { return el.id === 'kitsu:' + idByAlias })
+							retrieveKitsuEngTitle(idByAlias)
 							cb(idByAlias, kitsuCache[idByAlias], false, opts[idType])
 							return
 						}
@@ -194,6 +232,7 @@ const mapper = (query, opts, cb) => {
 					guessed[idType].push(opts[idType])
 					map[idType][opts[idType]] = firstId
 					kitsuCache[firstId] = searchResults[0]
+					retrieveKitsuEngTitle(firstId)
 					cb(firstId, searchResults[0], false, opts[idType])
 				}
 			}
@@ -264,6 +303,8 @@ module.exports = {
 	guessed: () => guessed,
 	missing: () => missing,
 	kitsuCache: () => kitsuCache,
+	kitsuPoster: (kitsuId) => { return kitsuPosters[kitsuId] },
+	kitsuEngTitle: (kitsuId) => { return kitsuEngTitles[kitsuId] },
 }
 
 // update mappings from another source
@@ -320,3 +361,40 @@ function updateMappingsList() {
 }
 
 updateMappingsList()
+
+function updateKitsuExtra() {
+	// we need to update posters periodically for kitsu
+	// and also get english title
+	let kitsuIds = Object.keys(kitsuCache)
+	function getKitsuExtra() {
+		if (!kitsuIds.length) {
+			setTimeout(() => {
+				updateKitsuExtra()
+			}, addonConfig.kitsuPosterCooldown)
+			fs.writeFileSync(path.join(__dirname, 'db', 'kitsuPosters.json'), JSON.stringify(kitsuPosters))
+			fs.writeFileSync(path.join(__dirname, 'db', 'kitsuEngTitles.json'), JSON.stringify(kitsuEngTitles))
+			return
+		}
+		const kitsuId = kitsuIds.pop()
+		needle.get(`https://kitsu.io/api/edge/anime/${kitsuId}`, (err, resp, body) => {
+			if (!err && resp.statusCode === 200 && ((body || {}).data || {}).id) {
+				if (((body.data.attributes || {}).titles || {}).en || ((body.data.attributes || {}).titles || {}).en_us) {
+					kitsuEngTitles[kitsuId] = body.data.attributes.titles.en || body.data.attributes.titles.en_us
+				}
+				if (((body.data.attributes || {}).posterImage || {}).medium) {
+					kitsuPosters[kitsuId] = body.data.attributes.posterImage.medium
+				}
+			} else {
+				console.log('err', err)
+				console.log(resp.statusCode)
+			}
+			setTimeout(() => { getKitsuExtra() }, 1 * 1000)
+			getKitsuExtra()
+		})
+	}
+	getKitsuExtra()
+}
+
+setTimeout(() => {
+	updateKitsuExtra()
+}, addonConfig.kitsuPosterCooldown)

@@ -15,5 +15,6 @@ module.exports = {
 	aniseachCooldown: 5 * 1000, // 5s
 	animeplanetCooldown: 5 * 1000, // 5s
 	livechartCooldown: 5 * 1000, // 5s
+	kitsuPosterCooldown: 7.3 * 24 * 60 * 60 * 1000, // 7.3 days
 	updateMappingsFromSource: 6 * 60 * 60 * 1000, // 6h
 }

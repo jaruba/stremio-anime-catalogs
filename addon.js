@@ -5,6 +5,7 @@ const addon = express()
 const path = require('path')
 const addonConfig = require('./config')
 const rpdb = require('./rpdb')
+const mapping = require('./mapping')
 
 const helpers = require('./helpers')
 
@@ -178,8 +179,7 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
             return
         }
 
-        // we use metahub otherwise as kitsu posters can break in time
-        resp.metas = resp.metas.map(el => rpdb.convert(el, catalogChoices['rpdbkey']))
+        resp.metas = resp.metas.map(el => rpdb.convert(el, catalogChoices['rpdbkey'], mapping.kitsuPoster(parseInt(el.id.replace('kitsu:',''))), mapping.kitsuEngTitle(parseInt(el.id.replace('kitsu:','')))))
 
         let cacheHeaders = {
             cacheMaxAge: 'max-age',
