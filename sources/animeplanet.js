@@ -79,8 +79,6 @@ const populateQueue = async.queue((task, cb) => {
 			if (!err && body) {
 				const $ = cheerio.load(body)
 				let lastAnimePlanetId = 0
-				console.log(body)
-				process.exit()
 				if ($("#siteContainer ul.cardDeck.cardGrid li.card > a").length) {
 					// grid type
 					$("#siteContainer ul.cardDeck.cardGrid li.card > a").each((ij, el) => {

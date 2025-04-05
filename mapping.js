@@ -385,8 +385,8 @@ function updateKitsuExtra() {
 					kitsuPosters[kitsuId] = body.data.attributes.posterImage.medium
 				}
 			} else {
-				console.log('err', err)
-				console.log(resp.statusCode)
+				console.log('kitsu anime err', err)
+				console.log('kitsu anime status code', (resp || {}).statusCode)
 			}
 			setTimeout(() => { getKitsuExtra() }, 1 * 1000)
 			getKitsuExtra()
