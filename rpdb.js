@@ -35,8 +35,13 @@ const populate = () => {
 	}, addonConfig.listUpdateInterval)
 }
 
-if (addonConfig.scanOnStart)
+if (addonConfig.scanOnStart) {
     populate()
+} else {
+	setTimeout(() => {
+		populate()
+	}, addonConfig.listUpdateInterval)
+}
 
 const kitsuToImdb = (kitsuId) => {
 	if (!kitsuId) return false
