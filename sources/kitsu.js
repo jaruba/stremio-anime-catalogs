@@ -83,7 +83,7 @@ const populateQueue = async.queue((task, cb) => {
                 helpers.log('kitsu', '---')
                 helpers.log('kitsu', '---')
                 if (!body || err) {
-                    console.log('err or empty body in kitsu')
+                    console.log('err or empty body in kitsu', pageUrl)
                     console.log(err)
                 }
                 helpers.log('kitsu', 'warning: could not get page: ' + pageUrl)
