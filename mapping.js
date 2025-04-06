@@ -188,7 +188,7 @@ const mapper = (query, opts, cb) => {
 								cb(foundId, kitsuCache[foundId], false, opts[idType])
 							}
 						} else {
-							helpers.log('mapping', '--- warning: invalid response from ' + kitsuMappingsUrl)
+							console.log('mapping', '--- warning: invalid response from ' + kitsuMappingsUrl)
 							guessed[idType].push(opts[idType])
 							map[idType][opts[idType]] = firstId
 							kitsuCache[firstId] = searchResults[0]
@@ -240,7 +240,7 @@ const mapper = (query, opts, cb) => {
 				checkMappings()
 			})
 		} else {
-			helpers.log('mapping', '--- warning: invalid response from ' + kitsuSearchUrl)
+			console.log('mapping', '--- warning: invalid response from ' + kitsuSearchUrl)
 			missing[idType].push(opts[idType])
 			cb(false, false, false, opts[idType])
 		}
