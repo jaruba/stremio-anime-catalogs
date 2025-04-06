@@ -1,5 +1,5 @@
 module.exports = {
-	verbose: false, // for debugging
+	verbose: true, // for debugging
 	ignoreMappingLogs: true,
 	ignoreDubbedLogs: true,
 	scanOnStart: false,
