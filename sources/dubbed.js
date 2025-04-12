@@ -69,7 +69,12 @@ const isDubbed = (kitsuId) => {
     return kitsuId ? dubbedIds.includes(kitsuId) : false
 }
 
-if (addonConfig.scanOnStart)
+if (addonConfig.scanOnStart) {
     populate()
+} else {
+    setTimeout(() => {
+        populate()
+    }, addonConfig.listUpdateInterval)
+}
 
 module.exports = isDubbed

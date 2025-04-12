@@ -139,8 +139,12 @@ const populate = () => {
 	}, addonConfig.listUpdateInterval)
 }
 
-if (addonConfig.scanOnStart)
+if (addonConfig.scanOnStart) {
 	setTimeout(() => {
 		populate()
 	}, 20 * 1000) // wait 20s for the id lists to update
-
+} else {
+	setTimeout(() => {
+		populate()
+	}, addonConfig.listUpdateInterval)
+}
