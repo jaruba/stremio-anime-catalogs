@@ -49,7 +49,7 @@ const kitsuToImdb = (kitsuId) => {
 }
 
 module.exports = {
-	convert: (meta, rpdbKey, kitsuPoster, kitsuEng) => {
+	convert: (meta, rpdbKey, useCinemeta, kitsuPoster, kitsuEng) => {
 		const kitsuId = (meta.id || '').replace('kitsu:', '')
 		const imdbId = kitsuToImdb(kitsuId)
 		// clone object first
@@ -60,8 +60,9 @@ module.exports = {
 			newMeta.poster = kitsuPoster
 		if (kitsuEng)
 			newMeta.name = kitsuEng
+		if (!!useCinemeta && imdbId)
+			newMeta.id = imdbId
 		return newMeta
-		return meta
 	},
 	setKitsuToImdbId: (kitsuId, imdbId) => {
 		toImdb2[kitsuId] = imdbId

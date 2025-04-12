@@ -179,7 +179,7 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
             return
         }
 
-        resp.metas = resp.metas.map(el => rpdb.convert(el, catalogChoices['rpdbkey'], mapping.kitsuPoster(parseInt(el.id.replace('kitsu:',''))), mapping.kitsuEngTitle(parseInt(el.id.replace('kitsu:','')))))
+        resp.metas = resp.metas.map(el => rpdb.convert(el, catalogChoices['rpdbkey'], catalogChoices['cinemeta'], mapping.kitsuPoster(parseInt(el.id.replace('kitsu:',''))), mapping.kitsuEngTitle(parseInt(el.id.replace('kitsu:','')))))
 
         let cacheHeaders = {
             cacheMaxAge: 'max-age',
