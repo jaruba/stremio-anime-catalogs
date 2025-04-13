@@ -163,7 +163,18 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
         const search = extra.search
         if (catalogChoices['rpdbkey'] || !!catalogChoices['cinemeta']) {
             searchQueue.push({ id: search }, (searchResp) => {
-                const searchList = searchResp.map(el => rpdb.convert(el, catalogChoices['rpdbkey'], catalogChoices['cinemeta'], mapping.kitsuPoster(parseInt(el.id.replace('kitsu:',''))), mapping.kitsuEngTitle(parseInt(el.id.replace('kitsu:','')))))
+                let searchList = searchResp.map(el => rpdb.convert(el, catalogChoices['rpdbkey'], catalogChoices['cinemeta'], mapping.kitsuPoster(parseInt(el.id.replace('kitsu:',''))), mapping.kitsuEngTitle(parseInt(el.id.replace('kitsu:','')))))
+
+                if (!!catalogChoices['cinemeta']) {
+                    const uniqueIds = []
+                    searchList = searchList.filter(el => {
+                      if (!uniqueIds.includes(el.id)) {
+                        uniqueIds.push(el.id)
+                        return true
+                      }
+                      return false
+                    })
+                }
 
                 let cacheHeaders = {
                     cacheMaxAge: 'max-age',
