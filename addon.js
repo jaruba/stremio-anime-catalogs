@@ -140,13 +140,15 @@ addon.get('/configure', (req, res) => {
     res.sendFile(path.join(__dirname, 'configure.html'))
 })
 
+const kitsuApi = require('./kitsu')
+const namedQueue = require('named-queue')
+
+const searchQueue = new namedQueue(async (task, cb) => {
+    let searchResp = await kitsuApi.search(task.id)
+    cb(searchResp || [])
+}, 1000)
+
 addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
-    if (req.params.id === 'anime-catalogs-search') {
-        const extra = req.params.extra ? qs.parse(req.url.split('/').pop().slice(0, -5)) : {}
-        const search = extra.search
-        res.redirect(307, 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-list/search=' + encodeURIComponent(search) + '.json')
-        return
-    }
     let catalogChoices
     if (req.params.catalogChoices) {
         try {
@@ -156,6 +158,33 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
         }
     }
     const onlyDub = !!catalogChoices['dubbed']
+    if (req.params.id === 'anime-catalogs-search') {
+        const extra = req.params.extra ? qs.parse(req.url.split('/').pop().slice(0, -5)) : {}
+        const search = extra.search
+        if (catalogChoices['rpdbkey'] || !!catalogChoices['cinemeta']) {
+            searchQueue.push({ id: search }, (searchResp) => {
+                const searchList = searchResp.map(el => rpdb.convert(el, catalogChoices['rpdbkey'], catalogChoices['cinemeta'], mapping.kitsuPoster(parseInt(el.id.replace('kitsu:',''))), mapping.kitsuEngTitle(parseInt(el.id.replace('kitsu:','')))))
+
+                let cacheHeaders = {
+                    cacheMaxAge: 'max-age',
+                    staleRevalidate: 'stale-while-revalidate',
+                    staleError: 'stale-if-error'
+                }
+
+                const cacheControl = Object.keys(cacheHeaders).map(prop => {
+                    const value = addonConfig[prop]
+                    if (!value) return false
+                    return cacheHeaders[prop] + '=' + value
+                }).filter(val => !!val).join(', ')
+                res.setHeader('Cache-control', `${cacheControl}, public`)
+                res.setHeader('Content-Type', 'application/json; charset=utf-8')
+                res.end(JSON.stringify({ metas: searchList }))
+            })
+            return
+        }
+        res.redirect(307, 'https://anime-kitsu.strem.fun/catalog/anime/kitsu-anime-list/search=' + encodeURIComponent(search) + '.json')
+        return
+    }
     const idParts = req.params.id.split('_')
     const lstType = idParts[0]
     const catType = idParts[1]

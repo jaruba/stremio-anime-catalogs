@@ -58,6 +58,12 @@ module.exports = {
 			newMeta.poster = 'https://api.ratingposterdb.com/' + rpdbKey + '/imdb/poster-default/' + imdbId + '.jpg?fallback=true'
 		else if (kitsuPoster)
 			newMeta.poster = kitsuPoster
+		else if (imdbId && !meta.poster)
+			newMeta.poster = `https://images.metahub.space/poster/small/${imdbId}/img`
+		if (imdbId && !meta.background)
+			meta.background = `https://images.metahub.space/background/medium/${imdbId}/img`
+		if (imdbId && !meta.logo)
+			meta.logo = `https://images.metahub.space/logo/medium/${imdbId}/img`
 		if (kitsuEng)
 			newMeta.name = kitsuEng
 		if (!!useCinemeta && imdbId)
