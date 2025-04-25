@@ -73,4 +73,7 @@ module.exports = {
 	setKitsuToImdbId: (kitsuId, imdbId) => {
 		toImdb2[kitsuId] = imdbId
 	},
+	kitsuToImdb: (kitsuId) => {
+		return kitsuToImdb(kitsuId)
+	},
 }

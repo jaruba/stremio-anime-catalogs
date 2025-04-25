@@ -252,6 +252,16 @@ addon.get('/:catalogChoices/meta/:type/:id.json', (req, res) => {
     }
 })
 
+addon.get('/kitsuToImdb', (req, res) => {
+    const kitsuId = req.params.kitsu
+    if (!kitsuId) {
+        res.writeHead(500)
+        res.end(JSON.stringify({ err: 'invalid kitsu id' }))
+        return
+    }
+    res.json({ imdbId: rpdb.kitsuToImdb(kitsuId) })
+})
+
 const port = process.env.PORT || 7090
 
 addon.listen(port, function() {
