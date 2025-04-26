@@ -253,7 +253,7 @@ addon.get('/:catalogChoices/meta/:type/:id.json', (req, res) => {
 })
 
 addon.get('/kitsuToImdb', (req, res) => {
-    const kitsuId = req.params.kitsu
+    const kitsuId = req.query.kitsu
     if (!kitsuId) {
         res.writeHead(500)
         res.end(JSON.stringify({ err: 'invalid kitsu id' }))
