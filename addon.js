@@ -161,6 +161,12 @@ addon.get('/:catalogChoices/catalog/:type/:id/:extra?.json', (req, res) => {
     if (req.params.id === 'anime-catalogs-search') {
         const extra = req.params.extra ? qs.parse(req.url.split('/').pop().slice(0, -5)) : {}
         const search = extra.search
+        if (!search) {
+            res.setHeader('Cache-control', `max-age=${12*60*60}, public`)
+            res.setHeader('Content-Type', 'application/json; charset=utf-8')
+            res.end(JSON.stringify({metas:[]}))
+            return
+        }
         if (catalogChoices['rpdbkey'] || !!catalogChoices['cinemeta']) {
             searchQueue.push({ id: search }, (searchResp) => {
                 let searchList = searchResp.map(el => rpdb.convert(el, catalogChoices['rpdbkey'], catalogChoices['cinemeta'], mapping.kitsuPoster(parseInt(el.id.replace('kitsu:',''))), mapping.kitsuEngTitle(parseInt(el.id.replace('kitsu:','')))))

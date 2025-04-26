@@ -34,7 +34,7 @@ async function search(searchTerm) {
 
   return _getCatalogEntries('anime', query)
       .then((entries) => entries.map(entry => {
-        const parsedTitles = [entry.name].concat(entry.aliases).map(title => parser.parse(title));
+        const parsedTitles = [entry.name].concat(entry.aliases).filter(title => !!title).map(title => parser.parse(title));
         const distances = parsedTitles.map(parsed => distance(parsedTitle, escapeTitle(parsed.title)));
         const maxDistance = Math.max(...distances);
         const maxTitle = parsedTitles[distances.indexOf(maxDistance)].title;
